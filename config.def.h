@@ -6,6 +6,8 @@ static const int vertpad = 8;               /* vertical padding of bar */
 static const int sidepad = 240;             /* horizontal padding of bar */
 
 /* -fn option overrides fonts[0]; default X11 font or font set */
+static const int user_bh = 8;               /* add an defined amount of pixels to the bar height */
+
 static const char *fonts[] = {
 	"Terminus (TTF):size=10"
 };
