@@ -181,9 +181,9 @@ drawmenu(void)
 		for (item = curr; item != next; item = item->right, i++)
 			drawitem(
 				item,
-				x + ((i / lines) *  ((mw - x) / columns)),
+				x + ((i / lines) *  ((mw - x - 2 * sp) / columns)),
 				y + (((i % lines) + 1) * bh),
-				(mw - x) / columns
+				(mw - x - 2 * sp) / columns
 			);
 	} else if (matches) {
 		/* draw horizontal list */
