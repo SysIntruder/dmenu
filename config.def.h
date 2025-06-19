@@ -2,14 +2,17 @@
 /* Default settings; can be overriden by command line. */
 
 static int topbar = 1;                      /* -b  option; if 0, dmenu appears at bottom     */
-static const int vertpad = 8;               /* vertical padding of bar */
+static const int vertpad = 10;               /* vertical padding of bar */
 static const int sidepad = 240;             /* horizontal padding of bar */
 
 /* -fn option overrides fonts[0]; default X11 font or font set */
-static const int user_bh = 8;               /* add an defined amount of pixels to the bar height */
+static const int user_bh = 10;               /* add an defined amount of pixels to the bar height */
 
 static const char *fonts[] = {
-	"Terminus (TTF):size=10"
+	// "Terminus (TTF):pixelsize=12:antialias=true:autohint=true"
+	// "Fixedsys Excelsior:pixelsize=14:antialias=true:autohint=true"
+	// "ProggyCleanTTSZ:size=12:antialias=true:autohint=true"
+	"Cozette:pixelsize=12:antialias=false:autohint=true"
 };
 static const char *prompt      = NULL;      /* -p  option; prompt to the left of input field */
 static const char *colors[SchemeLast][2] = {
