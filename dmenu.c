@@ -10,6 +10,7 @@
 
 #include <X11/Xlib.h>
 #include <X11/Xatom.h>
+#include <X11/Xresource.h>
 #include <X11/Xutil.h>
 #ifdef XINERAMA
 #include <X11/extensions/Xinerama.h>
@@ -26,12 +27,19 @@
 
 /* enums */
 enum { SchemeNorm, SchemeSel, SchemeOut, SchemeLast }; /* color schemes */
+enum resourcetype { XresInteger, XresString };
 
 struct item {
 	char *text;
 	struct item *left, *right;
 	int out;
 };
+
+typedef struct {
+	char *name;
+	enum resourcetype type;
+	void *dst;
+} ResourcePref;
 
 static char text[BUFSIZ] = "";
 static char *embed;
@@ -203,6 +211,55 @@ drawmenu(void)
 		}
 	}
 	drw_map(drw, win, 0, 0, mw, mh);
+}
+
+static void
+loadresource(XrmDatabase db, char *name, enum resourcetype rtype, void *dst)
+{
+	char *sdst = NULL;
+	int *idst = NULL;
+	char fullname[256];
+	char *type;
+	XrmValue ret;
+
+	sdst = dst;
+	idst = dst;
+
+	snprintf(fullname, sizeof(fullname), "%s.%s", "dmenu", name);
+	fullname[sizeof(fullname) - 1] = '\0';
+
+	XrmGetResource(db, fullname, "*", &type, &ret);
+	if (!(ret.addr == NULL || strncmp("String", type, 64))) {
+		switch (rtype) {
+		case XresInteger:
+			*idst = strtoul(ret.addr, NULL, 10);
+			break;
+		case XresString:
+			strcpy(sdst, ret.addr);
+			break;
+		}
+	}
+}
+
+static void
+loadxresources(void)
+{
+	Display *display;
+	char *resm;
+	XrmDatabase db;
+	ResourcePref *p;
+
+	display = XOpenDisplay(NULL);
+	if (display) {
+		resm = XResourceManagerString(display);
+		if (resm) {
+			db = XrmGetStringDatabase(resm);
+			for (p = resources; p < resources + LENGTH(resources); p++) {
+				loadresource(db, p->name, p->type, p->dst);
+			}
+		}
+	}
+	XCloseDisplay(display);
 }
 
 static void
@@ -833,6 +890,8 @@ main(int argc, char *argv[])
 		fputs("warning: no locale support\n", stderr);
 	if (!(dpy = XOpenDisplay(NULL)))
 		die("cannot open display");
+	XrmInitialize();
+	loadxresources();
 	screen = DefaultScreen(dpy);
 	root = RootWindow(dpy, screen);
 	if (!embed || !(parentwin = strtol(embed, NULL, 0)))
