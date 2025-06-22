@@ -35,14 +35,15 @@ static const char worddelimiters[] = " ";
 
 /* Xresources preferences to load at startup */
 ResourcePref resources[] = {
-	{ "topbar",  XresInteger, &topbar },
-	{ "vertpad", XresInteger, &vertpad },
-	{ "sidepad", XresInteger, &sidepad },
-	{ "user_bh", XresInteger, &user_bh },
-	{ "normbg",  XresString,  &normbg },
-	{ "normfg",  XresString,  &normfg },
-	{ "selbg",   XresString,  &selbg },
-	{ "selfg",   XresString,  &selfg },
-	{ "outbg",   XresString,  &outbg },
-	{ "outfg",   XresString,  &outfg },
+	{ "topbar",  XresInteger,    &topbar },
+	{ "vertpad", XresInteger,    &vertpad },
+	{ "sidepad", XresInteger,    &sidepad },
+	{ "user_bh", XresInteger,    &user_bh },
+	{ "font",    XresStringPtr,  &fonts[0] },
+	{ "normbg",  XresString,     &normbg },
+	{ "normfg",  XresString,     &normfg },
+	{ "selbg",   XresString,     &selbg },
+	{ "selfg",   XresString,     &selfg },
+	{ "outbg",   XresString,     &outbg },
+	{ "outfg",   XresString,     &outfg },
 };

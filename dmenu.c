@@ -27,7 +27,7 @@
 
 /* enums */
 enum { SchemeNorm, SchemeSel, SchemeOut, SchemeLast }; /* color schemes */
-enum resourcetype { XresInteger, XresString };
+enum resourcetype { XresInteger, XresStringPtr, XresString };
 
 struct item {
 	char *text;
@@ -217,12 +217,14 @@ static void
 loadresource(XrmDatabase db, char *name, enum resourcetype rtype, void *dst)
 {
 	char *sdst = NULL;
+	char **psdst = NULL;
 	int *idst = NULL;
 	char fullname[256];
 	char *type;
 	XrmValue ret;
 
 	sdst = dst;
+	psdst = dst;
 	idst = dst;
 
 	snprintf(fullname, sizeof(fullname), "%s.%s", "dmenu", name);
@@ -233,6 +235,9 @@ loadresource(XrmDatabase db, char *name, enum resourcetype rtype, void *dst)
 		switch (rtype) {
 		case XresInteger:
 			*idst = strtoul(ret.addr, NULL, 10);
+			break;
+		case XresStringPtr:
+			*psdst = ret.addr;
 			break;
 		case XresString:
 			strcpy(sdst, ret.addr);
