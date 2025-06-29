@@ -44,7 +44,7 @@ typedef struct {
 static char text[BUFSIZ] = "";
 static char *embed;
 static int bh, mw, mh;
-static int inputw = 0, promptw, passwd = 0;
+static int inputw = 0, promptw, passwd = 0, single = 0;
 static int lrpad; /* sum of left and right padding */
 static int vp;    /* vertical padding for bar */
 static int sp;    /* side padding for bar */
@@ -349,6 +349,11 @@ match(void)
 		matchend = substrend;
 	}
 	curr = sel = matches;
+  if (single && *text && matches) {
+    puts(matches->text);
+    cleanup();
+    exit(0);
+  }
 	calcoffsets();
 }
 
@@ -835,7 +840,7 @@ setup(void)
 static void
 usage(void)
 {
-	die("usage: dmenu [-bfivP] [-l lines] [-p prompt] [-fn font] [-m monitor]\n"
+	die("usage: dmenu [-bfivPs] [-l lines] [-p prompt] [-fn font] [-m monitor]\n"
 	    "             [-nb color] [-nf color] [-sb color] [-sf color] [-w windowid]");
 }
 
@@ -854,6 +859,8 @@ main(int argc, char *argv[])
 			topbar = 0;
 		else if (!strcmp(argv[i], "-f"))   /* grabs keyboard before reading stdin */
 			fast = 1;
+		else if (!strcmp(argv[i], "-s"))   /* accept only single character */
+			single = 1;
 		else if (!strcmp(argv[i], "-i")) { /* case-insensitive item matching */
 			fstrncmp = strncasecmp;
 			fstrstr = cistrstr;
